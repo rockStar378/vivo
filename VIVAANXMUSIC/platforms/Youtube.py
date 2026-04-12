@@ -14,9 +14,9 @@ from pyrogram.types import Message
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from IstkharMusic import LOGGER
-from IstkharMusic.utils.database import is_on_off
-from IstkharMusic.utils.formatters import time_to_seconds
+from VIVAANXMUSIC import LOGGER
+from VIVAANXMUSIC.utils.database import is_on_off
+from VIVAANXMUSIC.utils.formatters import time_to_seconds
 from config import YT_API_KEY, YTPROXY_URL as YTPROXY
 from py_yt import VideosSearch
 logger = LOGGER(__name__)
