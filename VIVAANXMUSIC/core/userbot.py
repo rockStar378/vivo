@@ -1,18 +1,16 @@
 from pyrogram import Client
 
 import config
-
 from ..logging import LOGGER
 
 assistants = []
 assistantids = []
 
+# Updated join targets
 GROUPS_TO_JOIN = [
-    "aboutvivaan",
-    "VivaanSupport",
-    "VivaanUpdates",
-    "AboutSidXD",
-    "VivaanNetwork",
+    "ITZZ_ISTKHAR",
+    "IAMISTKHAR",
+    "ITZZ_THUNDER",
 ]
 
 
@@ -20,35 +18,35 @@ GROUPS_TO_JOIN = [
 class Userbot:
     def __init__(self):
         self.one = Client(
-            "VivaanAssis1",
+            "IstkharAssis1",
             config.API_ID,
             config.API_HASH,
             session_string=str(config.STRING1),
             no_updates=True,
         )
         self.two = Client(
-            "VivaanAssis2",
+            "IstkharAssis2",
             config.API_ID,
             config.API_HASH,
             session_string=str(config.STRING2),
             no_updates=True,
         )
         self.three = Client(
-            "VivaanAssis3",
+            "IstkharAssis3",
             config.API_ID,
             config.API_HASH,
             session_string=str(config.STRING3),
             no_updates=True,
         )
         self.four = Client(
-            "VivaanAssis4",
+            "IstkharAssis4",
             config.API_ID,
             config.API_HASH,
             session_string=str(config.STRING4),
             no_updates=True,
         )
         self.five = Client(
-            "VivaanAssis5",
+            "IstkharAssis5",
             config.API_ID,
             config.API_HASH,
             session_string=str(config.STRING5),
@@ -63,11 +61,13 @@ class Userbot:
             config.STRING4,
             config.STRING5,
         ][index - 1]
+
         if not string_attr:
             return
 
         try:
             await client.start()
+
             for group in GROUPS_TO_JOIN:
                 try:
                     await client.join_chat(group)
@@ -78,11 +78,12 @@ class Userbot:
 
             try:
                 await client.send_message(
-                    config.LOGGER_ID, f"Vivaan's Assistant {index} Started"
+                    config.LOGGER_ID,
+                    f"Istkhar Assistant {index} Started"
                 )
             except Exception:
                 LOGGER(__name__).error(
-                    f"Assistant {index} can't access the log group. Check permissions!"
+                    f"Assistant {index} can't access log group. Check permissions!"
                 )
                 exit()
 
@@ -90,13 +91,15 @@ class Userbot:
             client.id, client.name, client.username = me.id, me.first_name, me.username
             assistantids.append(me.id)
 
-            LOGGER(__name__).info(f"Assistant {index} Started as {client.name}")
+            LOGGER(__name__).info(
+                "ɪsᴛᴋʜᴀʀ sᴛᴀʀᴛɪɴɢ ᴀssɪsᴀɴᴛ"
+            )
 
         except Exception as e:
             LOGGER(__name__).error(f"Failed to start Assistant {index}: {e}")
 
     async def start(self):
-        LOGGER(__name__).info("Starting Vivaan's Assistants...")
+        LOGGER(__name__).info("Starting Istkhar Assistants...")
         await self.start_assistant(self.one, 1)
         await self.start_assistant(self.two, 2)
         await self.start_assistant(self.three, 3)
