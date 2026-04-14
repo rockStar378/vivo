@@ -8,7 +8,7 @@ from VIVAANXMUSIC.utils.decorators.admins import AdminActual
 from config import BANNED_USERS
 
 
-# 🎨 Fancy Buttons
+# 🎨 Buttons UI
 def autoplay_markup():
     return InlineKeyboardMarkup(
         [
@@ -24,7 +24,7 @@ def autoplay_markup():
     )
 
 
-# ⏳ Auto Delete Function (non-blocking)
+# ⏳ Auto delete (non-blocking)
 async def delete_later(msg):
     await asyncio.sleep(20)
     try:
@@ -40,7 +40,7 @@ async def autoplay_control(_, message: Message, strings):
 
     command = message.command[0].lower()
 
-    # Channel mode check
+    # Channel mode
     if command.startswith("c"):
         chat_id = await get_cmode(message.chat.id)
         if chat_id is None:
@@ -52,25 +52,28 @@ async def autoplay_control(_, message: Message, strings):
     else:
         chat_id = message.chat.id
 
-    status = "✨ ᴇɴᴀʙʟᴇᴅ" if await get_autoplay(chat_id) else "⚡ ᴅɪꜱᴀʙʟᴇᴅ"
+    status = "ᴇɴᴀʙʟᴇ" if await get_autoplay(chat_id) else "ᴅɪsᴀʙʟᴇ"
+    chat_title = message.chat.title
 
     msg = await message.reply_text(
-        f"🎛 **ᴀᴜᴛᴏᴘʟᴀʏ ᴄᴏɴᴛʀᴏʟ ᴘᴀɴᴇʟ**\n\n"
-        f"➻ ꜱᴛᴀᴛᴜꜱ : {status}\n\n"
-        f"⟢ ᴜꜱᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ᴛᴏ ᴄᴏɴᴛʀᴏʟ",
+        f"❖ ᴀᴜᴛᴏ ᴘʟᴀʏ sᴇᴛᴛɪɴɢ ᴘᴀɴᴇʟ\n\n"
+        f"🏵️ ɢʀᴏᴜᴘ ɪᴅ :- `{chat_id}`\n"
+        f"🍂 sᴛᴀᴛᴜs :- {status} {'✅' if status == 'ᴇɴᴀʙʟᴇ' else '❌'}\n"
+        f"🏖️ ɢʀᴏᴜᴘ ɴᴀᴍᴇ :- {chat_title}\n\n"
+        f"❏ ᴛᴀᴘ ᴛᴏ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴄʜᴀɴɢᴇ ᴀᴜᴛᴏᴘʟᴀʏ sᴇᴛᴛɪɴɢ.",
         reply_markup=autoplay_markup()
     )
 
-    # 🔥 Auto delete after 20 sec (non-blocking)
     asyncio.create_task(delete_later(msg))
 
 
-# 🔘 Button Handler
+# 🔘 Callback Buttons
 @app.on_callback_query(filters.regex("^autoplay_"))
 async def autoplay_buttons(client, callback_query):
 
     data = callback_query.data
     chat_id = callback_query.message.chat.id
+    chat_title = callback_query.message.chat.title
 
     if data == "autoplay_on":
         await set_autoplay(chat_id, True)
@@ -89,14 +92,15 @@ async def autoplay_buttons(client, callback_query):
 
     await callback_query.answer("ᴜᴘᴅᴀᴛᴇᴅ ✓")
 
-    status = "✨ ᴇɴᴀʙʟᴇᴅ" if await get_autoplay(chat_id) else "⚡ ᴅɪꜱᴀʙʟᴇᴅ"
+    status = "ᴇɴᴀʙʟᴇ" if await get_autoplay(chat_id) else "ᴅɪsᴀʙʟᴇ"
 
     msg = await callback_query.message.edit_text(
-        f"🎛 **ᴀᴜᴛᴏᴘʟᴀʏ ᴄᴏɴᴛʀᴏʟ ᴘᴀɴᴇʟ**\n\n"
-        f"➻ ꜱᴛᴀᴛᴜꜱ : {status}\n\n"
-        f"⟢ ᴜꜱᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ᴛᴏ ᴄᴏɴᴛʀᴏʟ",
+        f"❖ ᴀᴜᴛᴏ ᴘʟᴀʏ sᴇᴛᴛɪɴɢ ᴘᴀɴᴇʟ\n\n"
+        f"🏵️ ɢʀᴏᴜᴘ ɪᴅ :- `{chat_id}`\n"
+        f"🍂 sᴛᴀᴛᴜs :- {status} {'✅' if status == 'ᴇɴᴀʙʟᴇ' else '❌'}\n"
+        f"🏖️ ɢʀᴏᴜᴘ ɴᴀᴍᴇ :- {chat_title}\n\n"
+        f"❏ ᴛᴀᴘ ᴛᴏ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴄʜᴀɴɢᴇ ᴀᴜᴛᴏᴘʟᴀʏ sᴇᴛᴛɪɴɢ.",
         reply_markup=autoplay_markup()
     )
 
-    # 🔥 Auto delete after 20 sec again
     asyncio.create_task(delete_later(msg))
