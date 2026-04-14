@@ -1,12 +1,12 @@
 import math
 from pyrogram.types import InlineKeyboardButton
 from VIVAANXMUSIC import app
-import config
 from VIVAANXMUSIC.utils.formatters import time_to_seconds
 
 
+# 🎵 TRACK BUTTON
 def track_markup(_, videoid, user_id, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -24,84 +24,91 @@ def track_markup(_, videoid, user_id, channel, fplay):
             )
         ],
     ]
-    return buttons
 
 
+# 🎛 PLAYER WITH TIMER (NEW PROGRESS BAR)
 def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
-    percentage = (played_sec / duration_sec) * 100
-    umm = math.floor(percentage)
-    if 0 < umm <= 10:
-        bar = "◉—————————"
-    elif 10 < umm < 20:
-        bar = "—◉————————"
-    elif 20 <= umm < 30:
-        bar = "——◉———————"
-    elif 30 <= umm < 40:
-        bar = "———◉——————"
-    elif 40 <= umm < 50:
-        bar = "————◉—————"
-    elif 50 <= umm < 60:
-        bar = "—————◉————"
-    elif 60 <= umm < 70:
-        bar = "——————◉———"
-    elif 70 <= umm < 80:
-        bar = "———————◉——"
-    elif 80 <= umm < 95:
-        bar = "————————◉—"
-    else:
-        bar = "—————————◉"
-        
+
+    # 🔥 Progress Bar ▰▱
+    total_blocks = 10
+    filled_blocks = int((played_sec / duration_sec) * total_blocks) if duration_sec != 0 else 0
+    bar = "▰" * filled_blocks + "▱" * (total_blocks - filled_blocks)
+
     buttons = [
+        # ⏱ Timer + Bar
         [
             InlineKeyboardButton(
                 text=f"{played} {bar} {dur}",
                 callback_data="GetTimer",
             )
         ],
+
+        # 🎮 Controls
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton("▷", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton("II", callback_data=f"ADMIN Pause|{chat_id}"),
+            InlineKeyboardButton("↻", callback_data=f"ADMIN Replay|{chat_id}"),
+            InlineKeyboardButton("‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
+            InlineKeyboardButton("▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
-         #[
-             #InlineKeyboardButton(text="< - 𝟤𝟢ˢ", callback_data="seek_backward_20"),
-             #InlineKeyboardButton(text="• ᴘʀᴏᴍᴏ •", url=f"https://t.me/m/FFljyYI6NmE9"),
-             #InlineKeyboardButton(text="𝟤𝟢ˢ + >", callback_data="seek_forward_20")
-         #],
+
+        # 🔥 Seek + Autoplay Row
         [
-            InlineKeyboardButton(text="✙ ʌᴅᴅ ϻє ɪη ʏσυʀ ɢʀσυᴘ ✙", url=f"https://t.me/{app.username}?startgroup=true"),
-        ]
+            InlineKeyboardButton("⟨ 𝟸𝟶ˢ", callback_data=f"seekback|{chat_id}"),
+            InlineKeyboardButton("🔁", callback_data=f"loop|{chat_id}"),
+            InlineKeyboardButton("🔄", callback_data="autoplay_toggle"),
+            InlineKeyboardButton("𝟸𝟶ˢ ⟩", callback_data=f"seekforward|{chat_id}"),
+        ],
+
+        # 🎯 Bottom Buttons
+        [
+            InlineKeyboardButton(
+                "✚ ᴀᴅᴅ ᴍᴇ ✚",
+                url=f"https://t.me/{app.username}?startgroup=true"
+            ),
+            InlineKeyboardButton(
+                "• ᴄʟᴏꜱᴇ •",
+                callback_data="close"
+            ),
+        ],
     ]
     return buttons
 
 
+# 🎛 PLAYER WITHOUT TIMER
 def stream_markup(_, chat_id):
-    buttons = [
+    return [
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-         ],
-        #[
-             #InlineKeyboardButton(text="< - 𝟤𝟢ˢ", callback_data="seek_backward_20"),
-             #InlineKeyboardButton(text="• ᴘʀᴏᴍᴏ •", url=f"https://t.me/m/FFljyYI6NmE9"),
-             #InlineKeyboardButton(text="𝟤𝟢ˢ + >", callback_data="seek_forward_20")
-         #],
+            InlineKeyboardButton("▷", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton("II", callback_data=f"ADMIN Pause|{chat_id}"),
+            InlineKeyboardButton("↻", callback_data=f"ADMIN Replay|{chat_id}"),
+            InlineKeyboardButton("‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
+            InlineKeyboardButton("▢", callback_data=f"ADMIN Stop|{chat_id}"),
+        ],
         [
-            InlineKeyboardButton(text="✙ ʌᴅᴅ ϻє ɪη ʏσυʀ ɢʀσυᴘ ✙", url=f"https://t.me/{app.username}?startgroup=true"),
-        ]
+            InlineKeyboardButton("⟨ 𝟸𝟶ˢ", callback_data=f"seekback|{chat_id}"),
+            InlineKeyboardButton("🔁", callback_data=f"loop|{chat_id}"),
+            InlineKeyboardButton("🔄", callback_data="autoplay_toggle"),
+            InlineKeyboardButton("𝟸𝟶ˢ ⟩", callback_data=f"seekforward|{chat_id}"),
+        ],
+        [
+            InlineKeyboardButton(
+                "✚ ᴀᴅᴅ ᴍᴇ ✚",
+                url=f"https://t.me/{app.username}?startgroup=true"
+            ),
+            InlineKeyboardButton(
+                "• ᴄʟᴏꜱᴇ •",
+                callback_data="close"
+            ),
+        ],
     ]
-    return buttons
 
 
+# 🎶 PLAYLIST
 def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -119,11 +126,11 @@ def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
             ),
         ],
     ]
-    return buttons
 
 
+# 🔴 LIVE STREAM
 def livestream_markup(_, videoid, user_id, mode, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_3"],
@@ -137,12 +144,12 @@ def livestream_markup(_, videoid, user_id, mode, channel, fplay):
             ),
         ],
     ]
-    return buttons
 
 
+# 🎚 SLIDER
 def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
     query = f"{query[:20]}"
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -168,5 +175,3 @@ def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
             ),
         ],
     ]
-    return buttons
-    
