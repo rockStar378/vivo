@@ -1,15 +1,16 @@
+from pyrogram.types import InlineKeyboardButton
+
 import config
 from VIVAANXMUSIC import app
-from VIVAANXMUSIC.button_styles import primary_button, success_button
 
 
 def start_panel(_):
     buttons = [
         [
-            primary_button(
+            InlineKeyboardButton(
                 text=_["S_B_1"], url=f"https://t.me/{app.username}?startgroup=true"
             ),
-            success_button(text=_["S_B_2"], url=config.SUPPORT_CHANNEL),
+            InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_CHAT),
         ],
     ]
     return buttons
@@ -18,17 +19,17 @@ def start_panel(_):
 def private_panel(_):
     buttons = [
         [
-            primary_button(
-                text=_["S_B_1"],
+            InlineKeyboardButton(
+                text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
             )
         ],
         [
-            primary_button(text=_["S_B_7"], user_id=config.OWNER_ID),
-            success_button(text=_["S_B_4"], url=config.SUPPORT_CHAT),
+            InlineKeyboardButton(text=_["S_B_9"], callback_data="sbot_cb"),  
+            InlineKeyboardButton(text=_["S_B_13"], callback_data="abot_cb"),
         ],
         [
-            primary_button(text=_["S_B_3"], callback_data="open_help"),
+            InlineKeyboardButton(text=_["S_B_4"], callback_data="settings_back_helper"),
         ],
     ]
     return buttons
