@@ -6,13 +6,13 @@ from pyrogram import filters
 load_dotenv()
 
 # ======================================================
-# 🔑 Core Credentials
+# 🔑 Core
 API_ID = int(getenv("API_ID", "24168862"))
 API_HASH = getenv("API_HASH", "916a9424dd1e58ab7955001ccc0172b3")
 BOT_TOKEN = getenv("BOT_TOKEN")
 
 # ======================================================
-# 👤 Owner / Bot Info
+# 👤 Owner / Bot
 OWNER_ID = int(getenv("OWNER_ID", 7473021518))
 OWNER_USERNAME = getenv("OWNER_USERNAME", "TheSigmacoder")
 BOT_USERNAME = getenv("BOT_USERNAME", "SonaliMusicBot")
@@ -20,19 +20,18 @@ BOT_NAME = getenv("BOT_NAME", "Sonali Music")
 ASSUSERNAME = getenv("ASSUSERNAME")
 
 # ======================================================
-# 🗄 Database / Logger
+# 🗄 DB / Logs
 MONGO_DB_URI = getenv("MONGO_DB_URI")
 LOGGER_ID = int(getenv("LOGGER_ID", "-1003834337399"))
 
-# 🔥 Error logging fix
 DEBUG_IGNORE_LOG = getenv("DEBUG_IGNORE_LOG", "False").lower() == "true"
 
 # ======================================================
-# 🔥 Sudo Users (IMPORTANT FIX)
+# 🔥 SUDO USERS
 AYU = [OWNER_ID]
 
 # ======================================================
-# 🌐 External APIs
+# 🌐 APIs
 API_URL = getenv("API_URL")
 API_KEY = getenv("API_KEY")
 DEEP_API = getenv("DEEP_API")
@@ -93,13 +92,25 @@ STRING6 = getenv("STRING_SESSION6")
 STRING7 = getenv("STRING_SESSION7")
 
 # ======================================================
-# 🖼 Images
+# 🖼 MEDIA / IMAGES (ALL FIXED)
+
 START_IMG_URL = getenv("START_IMG_URL", "https://files.catbox.moe/x5lytj.jpg")
 PING_IMG_URL = getenv("PING_IMG_URL", "https://files.catbox.moe/leaexg.jpg")
 
-# 🔥 FIX (missing vars)
+# 🔥 REQUIRED FIXES
 PING_VID_URL = PING_IMG_URL
 START_VID_URL = START_IMG_URL
+
+YOUTUBE_IMG_URL = "https://files.catbox.moe/2y5o3g.jpg"
+SOUNDCLOUD_IMG_URL = "https://telegra.ph/file/d30d11c4365c025c25e3e.jpg"
+STREAM_IMG_URL = "https://telegra.ph/file/d30d11c4365c025c25e3e.jpg"
+
+TELEGRAM_AUDIO_URL = "https://files.catbox.moe/2y5o3g.jpg"
+TELEGRAM_VIDEO_URL = "https://files.catbox.moe/2y5o3g.jpg"
+
+SPOTIFY_ARTIST_IMG_URL = "https://files.catbox.moe/2y5o3g.jpg"
+SPOTIFY_ALBUM_IMG_URL = "https://files.catbox.moe/2y5o3g.jpg"
+SPOTIFY_PLAYLIST_IMG_URL = "https://telegra.ph/file/d30d11c4365c025c25e3e.jpg"
 
 PLAYLIST_IMG_URL = "https://files.catbox.moe/b0e4vk.jpg"
 STATS_IMG_URL = "https://files.catbox.moe/psya34.jpg"
@@ -114,20 +125,11 @@ autoclean = []
 confirmer = {}
 
 # ======================================================
-# ⏱ Time Converter
+# ⏱ Time
 def time_to_seconds(time: str) -> int:
     return sum(int(x) * 60**i for i, x in enumerate(reversed(time.split(":"))))
 
 DURATION_LIMIT = time_to_seconds(f"{DURATION_LIMIT_MIN}:00")
-
-# ======================================================
-# 🎭 UI / Messages
-AYU_EMOJIS = ["💞","🦋","🔍","🧪","⚡️","🔥","🎩","🌈","🍷","🥂","🥃","🕊️","🪄","💌","🧨"]
-
-AYU_MESSAGES = [
-    "ʜᴇʟʟᴏ {0}, 🥀\n\nɪᴛ'ꜱ {1}",
-    "ʜɪɪ {0}, ɪ'ᴍ {1} 🎵"
-]
 
 # ======================================================
 # 🔒 Validation
