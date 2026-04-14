@@ -96,7 +96,8 @@ async def helper_private(client: app, update: Union[types.Message, types.Callbac
         keyboard = help_pannel(_)
 
         await update.reply_photo(
-            photo=START_IMG_URL,
+            random.choice(START_IMG),
+            has_spoiler=True,
             caption=_["help_1"].format(SUPPORT_CHAT),
             reply_markup=keyboard,
         )
