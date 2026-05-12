@@ -522,12 +522,15 @@ async def stop_download(_, query: CallbackQuery, _lang):
         return await query.edit_message_text(_lang["tg_7"].format(query.from_user.mention))
     except:
         return await query.answer(_lang["tg_8"], show_alert=True)
+
 #__________________________________[ SEEK AND SEEKBACK CALLBACKS ]_____________________________________
 
 async def check_callback_admin(client, callback_query: CallbackQuery):
+
     if callback_query.from_user.id in BANNED_USERS:
         await callback_query.answer(
-            "🚫 ʏᴏᴜ'ʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ!", show_alert=True
+            "🚫 ʏᴏᴜ'ʀᴇ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜɪs ʙᴏᴛ!",
+            show_alert=True
         )
         return False
 
@@ -536,22 +539,32 @@ async def check_callback_admin(client, callback_query: CallbackQuery):
 
     try:
         chat_id = callback_query.message.chat.id
-        member = await app.get_chat_member(chat_id, callback_query.from_user.id)
 
-        if member.privileges and member.privileges.can_manage_video_chats:
+        member = await app.get_chat_member(
+            chat_id,
+            callback_query.from_user.id
+        )
+
+        if (
+            member.privileges
+            and member.privileges.can_manage_video_chats
+        ):
             return True
 
     except Exception as e:
         print(f"Error checking admin status: {e}")
 
     await callback_query.answer(
-        "ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴠɪᴅᴇᴏ ᴄʜᴀᴛ's\n\nʀᴇʟᴏᴀᴅ ᴀᴅᴍɪɴs ᴄᴀᴄʜᴇ ᴠɪᴀ : /reload",
+        "❌ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪssɪᴏɴ.",
         show_alert=True
     )
+
     return False
 
 
-@app.on_callback_query(filters.regex("seek_forward_20"))
+#━━━━━━━━━━━ SEEK FORWARD ━━━━━━━━━━━#
+
+@app.on_callback_query(filters.regex("^seek_forward_20$"))
 async def seek_forward_20_cb(client, callback_query: CallbackQuery):
 
     if not await check_callback_admin(client, callback_query):
@@ -559,73 +572,100 @@ async def seek_forward_20_cb(client, callback_query: CallbackQuery):
 
     try:
         chat_id = callback_query.message.chat.id
+
         playing = db.get(chat_id)
 
-        if not playing or int(playing[0]["seconds"]) == 0:
+        if not playing:
             return await callback_query.answer(
-                "🚫 ʙᴏᴛ ɪs ɴᴏᴛ ɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ!",
+                "❌ ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.",
                 show_alert=True
             )
 
         duration_seconds = int(playing[0]["seconds"])
+
+        if duration_seconds == 0:
+            return await callback_query.answer(
+                "❌ ʟɪᴠᴇ sᴛʀᴇᴀᴍ ᴄᴀɴ'ᴛ ʙᴇ sᴇᴇᴋᴇᴅ.",
+                show_alert=True
+            )
+
         duration_played = int(playing[0]["played"])
+
         duration_to_skip = 20
+
         duration_str = seconds_to_min(duration_seconds)
 
         file_path = playing[0]["file"]
 
-        if (duration_seconds - (duration_played + duration_to_skip)) <= 10:
+        #━━━━━━━━━━━ END CHECK ━━━━━━━━━━━#
+
+        if (
+            duration_seconds
+            - (duration_played + duration_to_skip)
+        ) <= 10:
+
             return await callback_query.answer(
-                f"⛔ ᴛᴏᴏ ᴄʟᴏsᴇ ᴛᴏ ᴛʜᴇ ᴇɴᴅ.\n\n▶️ ᴘʟᴀʏᴇᴅ : {seconds_to_min(duration_played)} / {duration_str}",
+                f"⛔ ᴛᴏᴏ ᴄʟᴏsᴇ ᴛᴏ ᴛʜᴇ ᴇɴᴅ.\n\n"
+                f"▶️ {seconds_to_min(duration_played)} / {duration_str}",
                 show_alert=True
             )
 
-        to_seek = duration_played + duration_to_skip + 1
+        to_seek = duration_played + duration_to_skip
+
+        #━━━━━━━━━━━ FILE CHECK ━━━━━━━━━━━#
 
         if "vid_" in file_path:
+
             n, file_path = await YouTube.video(
-                playing[0]["vidid"], True
+                playing[0]["vidid"],
+                True
             )
 
             if n == 0:
                 return await callback_query.answer(
-                    "⛔ ᴠɪᴅᴇᴏ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ!",
+                    "❌ ᴠɪᴅᴇᴏ ɴᴏᴛ ғᴏᴜɴᴅ.",
                     show_alert=True
                 )
 
-        check = playing[0].get("speed_path")
+        speed = playing[0].get("speed_path")
 
-        if check:
-            file_path = check
+        if speed:
+            file_path = speed
 
         if "index_" in file_path:
             file_path = playing[0]["vidid"]
 
+        #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
+
         await Anony.seek_stream(
             chat_id,
             file_path,
-            seconds_to_min(to_seek),
+            to_seek,
             playing[0]["dur"],
             playing[0]["streamtype"],
         )
 
-        db[chat_id][0]["played"] += duration_to_skip
+        db[chat_id][0]["played"] = to_seek
 
         await callback_query.answer(
-            f"✅ sᴛʀᴇᴀᴍ sᴜᴄᴄᴇssғᴜʟʟʏ sᴇᴇᴋᴇᴅ → 20 sᴇᴄs!\n\n▶️ ᴘʟᴀʏᴇᴅ : {seconds_to_min(db[chat_id][0]['played'])} / {duration_str}",
+            f"⏩ sᴇᴇᴋᴇᴅ +20 sᴇᴄ\n\n"
+            f"▶️ {seconds_to_min(to_seek)} / {duration_str}",
             show_alert=True
         )
 
     except Exception as e:
-        print(f"Error in seek_forward_20_cb: {e}")
+
+        print(f"Seek Forward Error : {e}")
 
         await callback_query.answer(
-            "🚫 ғᴀɪʟᴇᴅ ᴛᴏ sᴇᴇᴋ ғᴏʀᴡᴀʀᴅ!",
+            "❌ ғᴀɪʟᴇᴅ ᴛᴏ sᴇᴇᴋ ғᴏʀᴡᴀʀᴅ.",
             show_alert=True
         )
 
 
-@app.on_callback_query(filters.regex("seek_backward_20"))
+#━━━━━━━━━━━ SEEK BACKWARD ━━━━━━━━━━━#
+
+@app.on_callback_query(filters.regex("^seek_backward_20$"))
 async def seek_backward_20_cb(client, callback_query: CallbackQuery):
 
     if not await check_callback_admin(client, callback_query):
@@ -633,68 +673,89 @@ async def seek_backward_20_cb(client, callback_query: CallbackQuery):
 
     try:
         chat_id = callback_query.message.chat.id
+
         playing = db.get(chat_id)
 
-        if not playing or int(playing[0]["seconds"]) == 0:
+        if not playing:
             return await callback_query.answer(
-                "🚫 ʙᴏᴛ ɪs ɴᴏᴛ ɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ!",
+                "❌ ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.",
                 show_alert=True
             )
 
         duration_seconds = int(playing[0]["seconds"])
+
+        if duration_seconds == 0:
+            return await callback_query.answer(
+                "❌ ʟɪᴠᴇ sᴛʀᴇᴀᴍ ᴄᴀɴ'ᴛ ʙᴇ sᴇᴇᴋᴇᴅ.",
+                show_alert=True
+            )
+
         duration_played = int(playing[0]["played"])
+
         duration_to_skip = 20
+
         duration_str = seconds_to_min(duration_seconds)
 
         file_path = playing[0]["file"]
 
-        if (duration_played - duration_to_skip) <= 10:
+        #━━━━━━━━━━━ START CHECK ━━━━━━━━━━━#
+
+        if (duration_played - duration_to_skip) <= 5:
+
             return await callback_query.answer(
-                f"⛔ ᴛᴏᴏ ᴄʟᴏsᴇ ᴛᴏ ᴛʜᴇ sᴛᴀʀᴛ.\n\n▶️ ᴘʟᴀʏᴇᴅ : {seconds_to_min(duration_played)} / {duration_str}",
+                f"⛔ ᴛᴏᴏ ᴄʟᴏsᴇ ᴛᴏ sᴛᴀʀᴛ.\n\n"
+                f"▶️ {seconds_to_min(duration_played)} / {duration_str}",
                 show_alert=True
             )
 
-        to_seek = duration_played - duration_to_skip + 1
+        to_seek = duration_played - duration_to_skip
+
+        #━━━━━━━━━━━ FILE CHECK ━━━━━━━━━━━#
 
         if "vid_" in file_path:
+
             n, file_path = await YouTube.video(
-                playing[0]["vidid"], True
+                playing[0]["vidid"],
+                True
             )
 
             if n == 0:
                 return await callback_query.answer(
-                    "⛔ ᴠɪᴅᴇᴏ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ!",
+                    "❌ ᴠɪᴅᴇᴏ ɴᴏᴛ ғᴏᴜɴᴅ.",
                     show_alert=True
                 )
 
-        check = playing[0].get("speed_path")
+        speed = playing[0].get("speed_path")
 
-        if check:
-            file_path = check
+        if speed:
+            file_path = speed
 
         if "index_" in file_path:
             file_path = playing[0]["vidid"]
 
+        #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
+
         await Anony.seek_stream(
             chat_id,
             file_path,
-            seconds_to_min(to_seek),
+            to_seek,
             playing[0]["dur"],
             playing[0]["streamtype"],
         )
 
-        db[chat_id][0]["played"] -= duration_to_skip
+        db[chat_id][0]["played"] = to_seek
 
         await callback_query.answer(
-            f"✅ sᴛʀᴇᴀᴍ sᴜᴄᴄᴇssғᴜʟʟʏ sᴇᴇᴋᴇᴅ ʙᴀᴄᴋ → 20 sᴇᴄs!\n\n▶️ ᴘʟᴀʏᴇᴅ : {seconds_to_min(db[chat_id][0]['played'])} / {duration_str}",
+            f"⏪ sᴇᴇᴋᴇᴅ -20 sᴇᴄ\n\n"
+            f"▶️ {seconds_to_min(to_seek)} / {duration_str}",
             show_alert=True
         )
 
     except Exception as e:
-        print(f"Error in seek_backward_20_cb: {e}")
+
+        print(f"Seek Backward Error : {e}")
 
         await callback_query.answer(
-            "🚫 ғᴀɪʟᴇᴅ ᴛᴏ sᴇᴇᴋ ʙᴀᴄᴋᴡᴀʀᴅ!",
+            "❌ ғᴀɪʟᴇᴅ ᴛᴏ sᴇᴇᴋ ʙᴀᴄᴋᴡᴀʀᴅ.",
             show_alert=True
         )
-
