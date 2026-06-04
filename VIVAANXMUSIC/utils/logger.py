@@ -1,4 +1,4 @@
-from pyrogram.enums import ParseMode
+from pyrogram.enums import ParseMode, ChatMembersFilter, ChatMemberStatus
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from VIVAANXMUSIC import app
@@ -123,6 +123,19 @@ async def autoplay_log(client, chat_id, query):
     except:
         members_count = "Unknown"
 
+    # Owner Dhoondhne ka logic yahan add kiya gaya hai
+    owner_name = "Unknown / Hidden"
+    try:
+        async for member in client.get_chat_members(chat_id, filter=ChatMembersFilter.ADMINISTRATORS):
+            if member.status == ChatMemberStatus.OWNER:
+                owner = member.user
+                owner_name = f"{owner.first_name} {owner.last_name or ''}".strip()
+                if owner.username:
+                    owner_name += f" (@{owner.username})"
+                break
+    except:
+        pass
+
     chat_link = None
     if chat_username:
         chat_link = f"https://t.me/{chat_username}"
@@ -137,8 +150,10 @@ async def autoplay_log(client, chat_id, query):
 🔄 <b>AUTOPLAY LOG</b>
 
 • <b>Track :</b> {query}
+• <b>Triggered By :</b> Autoplay System
 • <b>Chat :</b> {chat_title}
 • <b>Chat ID :</b> <code>{chat_id}</code>
+• <b>Owner :</b> {owner_name}
 • <b>Members :</b> {members_count}
 </blockquote>
 """
