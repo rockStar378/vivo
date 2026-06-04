@@ -49,6 +49,7 @@ from VIVAANXMUSIC.security import build_subprocess_env
 from VIVAANXMUSIC.utils.stream.autoclear import auto_clean
 from VIVAANXMUSIC.utils.stream.cards import schedule_stream_card
 from VIVAANXMUSIC.utils.errors import capture_internal_err, send_large_error
+
 autoend = {}
 counter = {}
 vc_join_monitors = {}
@@ -161,8 +162,7 @@ class Call:
         if event_key in vc_join_event_cache:
             return False
 
-vc_join_event_cache[event_key] = now 
-)
+        vc_join_event_cache[event_key] = now 
         return True
         
     @staticmethod
