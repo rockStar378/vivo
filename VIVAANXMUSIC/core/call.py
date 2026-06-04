@@ -161,16 +161,10 @@ class Call:
         if event_key in vc_join_event_cache:
             return False
 
-        vc_join_event_cache[event_key] = now
-        
-        await autoplay_log(
-    app,
-    chat_id,
-    finished_track.get("title", "Unknown Track")
-        )
-        
+vc_join_event_cache[event_key] = now 
+)
         return True
-
+        
     @staticmethod
     def _remember_join_notice(
         notify_chat_id: int,
