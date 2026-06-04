@@ -34,6 +34,8 @@ from VIVAANXMUSIC.utils.database import (
     mute_off,
     mute_on,
     set_loop,
+    get_autoplay,
+    save_autoplay,
 )
 from VIVAANXMUSIC.utils.decorators import ActualAdminCB, languageCB
 from VIVAANXMUSIC.utils.formatters import seconds_to_min
@@ -183,6 +185,32 @@ async def manage_callback(client, callback: CallbackQuery, _):
         await mute_off(chat_id)
         await JARVIS.unmute_stream(chat_id)
         await callback.message.reply_text(_["admin_48"].format(user_mention))
+
+    # 🔥 NEW AUTOPLAY PANEL LOGIC 🔥
+    elif command == "Autoplay":
+        await callback.answer()
+        from VIVAANXMUSIC.utils.inline.play import autoplay_markup
+        try:
+            buttons = autoplay_markup(chat_id)
+            await callback.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
+        except Exception as e:
+            pass
+
+    elif command == "AutoOn":
+        await save_autoplay(chat_id, True)
+        await callback.answer("✨ ❖ 𝐀ᴜᴛᴏ𝐏ʟᴀʏ ❖ ᴇɴᴀʙʟᴇᴅ !", show_alert=True)
+
+    elif command == "AutoOff":
+        await save_autoplay(chat_id, False)
+        await callback.answer("⚡ ❖ 𝐀ᴜᴛᴏ𝐏ʟᴀʏ ❖ ᴅɪsᴀʙʟᴇᴅ !", show_alert=True)
+
+    elif command == "AutoRefresh":
+        await callback.answer()
+        try:
+            buttons = stream_markup(_, chat_id)
+            await callback.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
+        except Exception:
+            pass
 
     elif command == "Loop":
         await callback.answer()
@@ -637,7 +665,7 @@ async def seek_forward_20_cb(client, callback_query: CallbackQuery):
 
         #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
 
-        await Anony.seek_stream(
+        await JARVIS.seek_stream(
             chat_id,
             file_path,
             to_seek,
@@ -735,7 +763,7 @@ async def seek_backward_20_cb(client, callback_query: CallbackQuery):
 
         #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
 
-        await Anony.seek_stream(
+        await JARVIS.seek_stream(
             chat_id,
             file_path,
             to_seek,
