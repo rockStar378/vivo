@@ -19,6 +19,7 @@ from pytgcalls.types import AudioQuality, ChatUpdate, MediaStream, StreamEnded, 
 
 import config
 from strings import get_string
+from VIVAANXMUSIC.utils.logger import autoplay_log
 from VIVAANXMUSIC import LOGGER, YouTube, app
 from VIVAANXMUSIC.misc import db
 from VIVAANXMUSIC.utils.database import (
