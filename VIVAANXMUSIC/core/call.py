@@ -162,6 +162,13 @@ class Call:
             return False
 
         vc_join_event_cache[event_key] = now
+        
+        await autoplay_log(
+    app,
+    chat_id,
+    finished_track.get("title", "Unknown Track")
+        )
+        
         return True
 
     @staticmethod
