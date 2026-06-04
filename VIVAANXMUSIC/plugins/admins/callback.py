@@ -35,7 +35,7 @@ from VIVAANXMUSIC.utils.database import (
     mute_on,
     set_loop,
     get_autoplay,
-    save_autoplay,
+    set_autoplay,
 )
 from VIVAANXMUSIC.utils.decorators import ActualAdminCB, languageCB
 from VIVAANXMUSIC.utils.formatters import seconds_to_min
@@ -197,11 +197,11 @@ async def manage_callback(client, callback: CallbackQuery, _):
             pass
 
     elif command == "AutoOn":
-        await save_autoplay(chat_id, True)
+        await set_autoplay(chat_id, True)
         await callback.answer("✨ ❖ 𝐀ᴜᴛᴏ𝐏ʟᴀʏ ❖ ᴇɴᴀʙʟᴇᴅ !", show_alert=True)
 
     elif command == "AutoOff":
-        await save_autoplay(chat_id, False)
+        await set_autoplay(chat_id, False)
         await callback.answer("⚡ ❖ 𝐀ᴜᴛᴏ𝐏ʟᴀʏ ❖ ᴅɪsᴀʙʟᴇᴅ !", show_alert=True)
 
     elif command == "AutoRefresh":
