@@ -663,12 +663,12 @@ async def seek_forward_20_cb(client, callback_query: CallbackQuery):
         if "index_" in file_path:
             file_path = playing[0]["vidid"]
 
-        #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
+        #━━━━━━━━━━━ SEEK (FIXED FORMAT) ━━━━━━━━━━━#
 
         await JARVIS.seek_stream(
             chat_id,
             file_path,
-            to_seek,
+            seconds_to_min(to_seek),  # 🔥 Changed to String format
             playing[0]["dur"],
             playing[0]["streamtype"],
         )
@@ -761,12 +761,12 @@ async def seek_backward_20_cb(client, callback_query: CallbackQuery):
         if "index_" in file_path:
             file_path = playing[0]["vidid"]
 
-        #━━━━━━━━━━━ SEEK ━━━━━━━━━━━#
+        #━━━━━━━━━━━ SEEK (FIXED FORMAT) ━━━━━━━━━━━#
 
         await JARVIS.seek_stream(
             chat_id,
             file_path,
-            to_seek,
+            seconds_to_min(to_seek),  # 🔥 Changed to String format
             playing[0]["dur"],
             playing[0]["streamtype"],
         )
