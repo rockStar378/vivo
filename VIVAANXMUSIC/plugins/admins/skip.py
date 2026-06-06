@@ -40,18 +40,23 @@ async def skip(cli, message: Message, _, chat_id):
                             if popped:
                                 await auto_clean(popped)
                             if not check:
-                                try:
-                                    await message.reply_text(
-                                        text=_["admin_6"].format(
-                                            message.from_user.mention,
-                                            message.chat.title,
-                                        ),
-                                        reply_markup=close_markup(_),
-                                    )
-                                    await JARVIS.stop_stream(chat_id)
-                                except:
-                                    return
-                                break
+                                # 🔥 AUTOPLAY INJECTION (MULTI-SKIP)
+                                if await JARVIS._enqueue_autoplay_track(chat_id, popped):
+                                    check = db.get(chat_id)
+                                    break
+                                else:
+                                    try:
+                                        await message.reply_text(
+                                            text=_["admin_6"].format(
+                                                message.from_user.mention,
+                                                message.chat.title,
+                                            ),
+                                            reply_markup=close_markup(_),
+                                        )
+                                        await JARVIS.stop_stream(chat_id)
+                                    except:
+                                        return
+                                    break
                     else:
                         return await message.reply_text(_["admin_11"].format(count))
                 else:
@@ -68,16 +73,20 @@ async def skip(cli, message: Message, _, chat_id):
             if popped:
                 await auto_clean(popped)
             if not check:
-                await message.reply_text(
-                    text=_["admin_6"].format(
-                        message.from_user.mention, message.chat.title
-                    ),
-                    reply_markup=close_markup(_),
-                )
-                try:
-                    return await JARVIS.stop_stream(chat_id)
-                except:
-                    return
+                # 🔥 AUTOPLAY INJECTION (SINGLE SKIP)
+                if await JARVIS._enqueue_autoplay_track(chat_id, popped):
+                    check = db.get(chat_id)
+                else:
+                    await message.reply_text(
+                        text=_["admin_6"].format(
+                            message.from_user.mention, message.chat.title
+                        ),
+                        reply_markup=close_markup(_),
+                    )
+                    try:
+                        return await JARVIS.stop_stream(chat_id)
+                    except:
+                        return
         except:
             try:
                 await message.reply_text(
@@ -89,6 +98,8 @@ async def skip(cli, message: Message, _, chat_id):
                 return await JARVIS.stop_stream(chat_id)
             except:
                 return
+
+    # Uske baad automatically check[0] wala play ho jayega (yaani tumhara naya Autoplay gaana)
     queued = check[0]["file"]
     title = (check[0]["title"]).title()
     user = check[0]["by"]
@@ -98,11 +109,13 @@ async def skip(cli, message: Message, _, chat_id):
     status = True if str(streamtype) == "video" else None
     db[chat_id][0]["played"] = 0
     exis = (check[0]).get("old_dur")
+    
     if exis:
         db[chat_id][0]["dur"] = exis
         db[chat_id][0]["seconds"] = check[0]["old_second"]
         db[chat_id][0]["speed_path"] = None
         db[chat_id][0]["speed"] = 1.0
+        
     if "live_" in queued:
         n, link = await YouTube.video(videoid, True)
         if n == 0:
@@ -192,6 +205,7 @@ async def skip(cli, message: Message, _, chat_id):
             await JARVIS.skip_stream(chat_id, queued, video=status, image=image)
         except:
             return await message.reply_text(_["call_6"])
+            
         if videoid == "telegram":
             button = stream_markup(_, chat_id)
             run = await message.reply_photo(
