@@ -15,7 +15,7 @@ from config import API_ID, API_HASH
 from VIVAANXMUSIC import app
 from config import OWNER_ID
 from VIVAANXMUSIC.misc import SUDOERS
-from VIVAANXMUSIC.utils.database import get_assistant, clonebotdb
+from Clonify.utils.database import get_assistant, clonebotdb
 from VIVAANXMUSIC.utils.database.clonedb import has_user_cloned_any_bot
 from config import LOGGER_ID, CLONE_LOGGER
 import requests
