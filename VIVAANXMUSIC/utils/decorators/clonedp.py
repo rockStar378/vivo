@@ -1,4 +1,4 @@
-fromVIVAANXMUSIC.core.mongo import mongodb, pymongodb
+from VIVAANXMUSIC.core.mongo import mongodb, pymongodb
 from typing import Dict, List, Union
 
 cloneownerdb = mongodb.cloneownerdb
