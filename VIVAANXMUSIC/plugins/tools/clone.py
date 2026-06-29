@@ -28,7 +28,10 @@ from config import SUPPORT_CHAT, OWNER_ID
 from datetime import datetime
 
 CLONES = set()
-)
+
+print("Hello World") # Cleaned up
+
+
 
 C_BOT_DESC = "Wᴀɴᴛ ᴀ ʙᴏᴛ ʟɪᴋᴇ ᴛʜɪs? Cʟᴏɴᴇ ɪᴛ ɴᴏᴡ! ✅\n\nVɪsɪᴛ: @SumoMusicBot ᴛᴏ ɢᴇᴛ sᴛᴀʀᴛᴇᴅ!\n\n - Uᴘᴅᴀᴛᴇ: @jully_updates\n - Oᴡɴᴇʀ: @itzz_istkhar"
 
