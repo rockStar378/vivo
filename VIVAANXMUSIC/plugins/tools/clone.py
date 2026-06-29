@@ -10,23 +10,23 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     AccessTokenExpired,
     AccessTokenInvalid,
 )
-from VIVAANXMUSIC.utils.database import get_assistant
 
 from config import API_ID, API_HASH
-fromVIVAANXMUSIC import app
+from VIVAANXMUSIC import app
 from config import OWNER_ID
-fromVIVAANXMUSIC.misc import SUDOERS
-fromVIVAANXMUSIC.utils.database import get_assistant, clonebotdb
-fromVIVAANXMUSIC.utils.database.clonedb import has_user_cloned_any_bot
+from VIVAANXMUSIC.misc import SUDOERS
+from VIVAANXMUSIC.utils.database import get_assistant, clonebotdb
+from VIVAANXMUSIC.utils.database.clonedb import has_user_cloned_any_bot
 from config import LOGGER_ID, CLONE_LOGGER
 import requests
-fromVIVAANXMUSIC.utils.decorators.language import language
+from VIVAANXMUSIC.utils.decorators.language import language
 import pyrogram.errors
 
-fromVIVAANXMUSIC.utils.database.clonedb import get_owner_id_from_db
+from VIVAANXMUSIC.utils.database.clonedb import get_owner_id_from_db
 from config import SUPPORT_CHAT, OWNER_ID
 
 from datetime import datetime
+
 CLONES = set()
 
 C_BOT_DESC = "Wᴀɴᴛ ᴀ ʙᴏᴛ ʟɪᴋᴇ ᴛʜɪs? Cʟᴏɴᴇ ɪᴛ ɴᴏᴡ! ✅\n\nVɪsɪᴛ: @SumoMusicBot ᴛᴏ ɢᴇᴛ sᴛᴀʀᴛᴇᴅ!\n\n - Uᴘᴅᴀᴛᴇ: @jully_updates\n - Oᴡɴᴇʀ: @itzz_istkhar"
