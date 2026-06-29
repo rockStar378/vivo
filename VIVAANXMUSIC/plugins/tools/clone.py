@@ -15,8 +15,8 @@ from config import API_ID, API_HASH
 from VIVAANXMUSIC import app
 from config import OWNER_ID
 from VIVAANXMUSIC.misc import SUDOERS
-from VIVAANXMUSIC.utils.database import get_assistant, clonebotdb
-from VIVAANXMUSIC.utils.database.clonedb import has_user_cloned_any_bot
+from VIVAANXMUSIC.utils.database import get_assistant
+from VIVAANXMUSIC.utils.database.clonedb import has_user_cloned_any_bot, clonebotdb
 from config import LOGGER_ID, CLONE_LOGGER
 import requests
 from VIVAANXMUSIC.utils.decorators.language import language
@@ -28,6 +28,7 @@ from config import SUPPORT_CHAT, OWNER_ID
 from datetime import datetime
 
 CLONES = set()
+)
 
 C_BOT_DESC = "Wᴀɴᴛ ᴀ ʙᴏᴛ ʟɪᴋᴇ ᴛʜɪs? Cʟᴏɴᴇ ɪᴛ ɴᴏᴡ! ✅\n\nVɪsɪᴛ: @SumoMusicBot ᴛᴏ ɢᴇᴛ sᴛᴀʀᴛᴇᴅ!\n\n - Uᴘᴅᴀᴛᴇ: @jully_updates\n - Oᴡɴᴇʀ: @itzz_istkhar"
 
