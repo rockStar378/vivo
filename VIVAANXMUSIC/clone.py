@@ -6,11 +6,11 @@ import psutil
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from Clonify import app
+fromVIVAANXMUSIC import app
 from config import PING_IMG_URL, STREAMI_PICS
 from .utils import StartTime
-from Clonify.utils import get_readable_time
-from Clonify.utils.decorators.language import language
+fromVIVAANXMUSIC.utils import get_readable_time
+fromVIVAANXMUSIC.utils.decorators.language import language
 
 APP_LINK = f"https://t.me/NOBITA_MUSIC_TG_BOT"
 
